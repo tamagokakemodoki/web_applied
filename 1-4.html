@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+ <body>
+    <p>ページ</p>
+    <button onclick="myFunc();">Hello</button>
+    <button onclick="showDouble();">2倍を表示</button>   <!-- ★追加：2つ目のボタン -->
+    <script>
+      function myFunc() {              // 手順4のまま
+        console.log("Hello");
+      }
+
+      // ★追加：受け取った n を2倍して返す（C言語と違い、戻り値の型は書かない）
+      function double(n) {
+        return n * 2;
+      }
+
+      // ★追加：double() を呼び出して、返ってきた値を表示する
+      function showDouble() {
+        const result = double(21);            // 返ってきた値を result に入れる
+        console.log(`21の2倍は ${result}`);   // → 21の2倍は 42
+      }
+    </script>
+  </body>
+</html>
