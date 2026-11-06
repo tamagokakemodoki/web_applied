@@ -1,19 +1,46 @@
+
 const canvas = document.getElementById("stage");
 const ctx = canvas.getContext("2d");
-const info = document.getElementById("info");   // 5_stage.html の <p id="info">
+const info = document.getElementById("info");
 
-let x = 100;          // 丸の中心の位置
+let x = 100;
 let y = 80;
-let vx = 180;         // 横の速さ（1秒に180px）
-let vy = 140;         // 縦の速さ（1秒に140px。＋ は下へ）
-const r = 14;         // 半径
+let vx = 180;
+let vy = 140;
+let r = 14;  // const から let に変更
+let color = "#ffd166";
+
 let last = performance.now();
+
+// キーを押した瞬間に値を変更
+document.addEventListener("keydown", (e) => {
+  if (e.code === "ArrowUp") {
+    vx = vx * 1.2;
+    vy = vy * 1.2;
+  }
+
+  if (e.code === "ArrowDown") {
+    vx = vx * 0.8;
+    vy = vy * 0.8;
+  }
+
+  if (e.code === "ArrowRight") {
+    r = Math.min(r + 2, 50);
+  }
+
+  if (e.code === "ArrowLeft") {
+    r = Math.max(r - 2, 5);
+  }
+
+  if (e.code === "KeyC") {
+    color = color === "#ffd166" ? "#06d6a0" : "#ffd166";
+  }
+});
 
 function update(dt) {
   x = x + vx * dt;
   y = y + vy * dt;
 
-  // 左右の壁（丸は x が中心なので、半径 r を足し引きする）
   if (x + r > canvas.width) {
     x = canvas.width - r;
     vx = -vx;
@@ -22,7 +49,7 @@ function update(dt) {
     x = r;
     vx = -vx;
   }
-  // 上下の壁
+
   if (y + r > canvas.height) {
     y = canvas.height - r;
     vy = -vy;
@@ -35,21 +62,24 @@ function update(dt) {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ffd166";
+
+  ctx.fillStyle = color;
   ctx.beginPath();
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();
 }
 
-// now：今回呼ばれた時刻（ミリ秒）。requestAnimationFrame が引数で渡してくれる
 function loop(now) {
-  const dt = (now - last) / 1000;   // 前回からの時間（秒）
-  last = now;                       // 今回の時刻を、次の「前回」として覚えておく
+  const dt = (now - last) / 1000;
+  last = now;
 
-  info.textContent = "dt：" + dt.toFixed(4) + " 秒　／　1秒に約 " + (1 / dt).toFixed(0) + " 回";
+  info.textContent =
+    "dt：" + dt.toFixed(4) +
+    " 秒　／　1秒に約 " + (1 / dt).toFixed(0) + " 回";
 
   update(dt);
   draw();
+
   requestAnimationFrame(loop);
 }
 
