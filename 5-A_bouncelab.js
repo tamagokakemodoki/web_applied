@@ -7,6 +7,7 @@ let x = 100;
 let y = 80;
 let vx = 180;
 let vy = 140;
+let gravity = 500; // 重力（1秒ごとに増える速度）
 let r = 14;  // const から let に変更
 let color = "#ffd166";
 
@@ -38,25 +39,34 @@ document.addEventListener("keydown", (e) => {
 });
 
 function update(dt) {
+  // 重力を加える
+  vy = vy + gravity * dt;
+
+  // ボールの位置を更新
   x = x + vx * dt;
   y = y + vy * dt;
 
+  // 左右の壁
   if (x + r > canvas.width) {
     x = canvas.width - r;
     vx = -vx;
   }
+
   if (x - r < 0) {
     x = r;
     vx = -vx;
   }
 
-  if (y + r > canvas.height) {
-    y = canvas.height - r;
-    vy = -vy;
-  }
+  // 上の壁
   if (y - r < 0) {
     y = r;
     vy = -vy;
+  }
+
+  // 床に当たったら跳ね返る
+  if (y + r > canvas.height) {
+    y = canvas.height - r;
+    vy = -vy * 0.85; // 15%ずつ跳ね返る力を弱くする
   }
 }
 
